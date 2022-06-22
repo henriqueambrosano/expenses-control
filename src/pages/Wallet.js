@@ -40,8 +40,7 @@ class Wallet extends React.Component {
 
   render() {
     const { userEmail, currencies, expenses } = this.props;
-    const { value, description, currency, method, tag } = this.state;
-    console.log(currency, method, tag);
+    const { value, description } = this.state;
     return (
       <div>
         <h1> TrybeWallet </h1>
@@ -103,15 +102,36 @@ class Wallet extends React.Component {
           </button>
         </form>
         <table>
-          <th>Descrição</th>
-          <th>Tag</th>
-          <th>Método de pagamento</th>
-          <th>Valor</th>
-          <th>Moeda</th>
-          <th>Câmbio utilizado</th>
-          <th>Valor convertido</th>
-          <th>Moeda de conversão</th>
-          <th>Editar/Excluir</th>
+          <thead>
+            <tr>
+              <th>Descrição</th>
+              <th>Tag</th>
+              <th>Método de pagamento</th>
+              <th>Valor</th>
+              <th>Moeda</th>
+              <th>Câmbio utilizado</th>
+              <th>Valor convertido</th>
+              <th>Moeda de conversão</th>
+              <th>Editar/Excluir</th>
+            </tr>
+          </thead>
+          <tbody>
+            {expenses.map((expense) => (
+              <tr key={ expense.id }>
+                <td>{expense.description}</td>
+                <td>{expense.tag}</td>
+                <td>{expense.method}</td>
+                <td>{(+expense.value).toFixed(2)}</td>
+                <td>{(expense.exchangeRates[expense.currency].name).split('/')[0]}</td>
+                <td>{(+expense.exchangeRates[expense.currency].ask).toFixed(2) }</td>
+                <td>
+                  {(+expense.value * expense.exchangeRates[expense.currency].ask)
+                    .toFixed(2)}
+                </td>
+                <td>Real</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     );

@@ -47,10 +47,10 @@ class Wallet extends React.Component {
         <h1> TrybeWallet </h1>
         <p data-testid="email-field">{userEmail}</p>
         <p data-testid="total-field">
-          {!expenses ? '0' : expenses.reduce((acc, curr) => {
+          {!expenses ? 0 : expenses.reduce((acc, curr) => {
             acc += curr.value * curr.exchangeRates[curr.currency].ask;
             return acc;
-          }, 0)}
+          }, 0).toFixed(2)}
         </p>
         <p data-testid="header-currency-field"> BRL </p>
         <form>

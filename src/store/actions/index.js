@@ -2,6 +2,7 @@
 export const USER_EMAIL = 'USER_EMAIL';
 export const FETCH_CURRENCIES = 'FETCH_CURRENCIES';
 export const SAVE_EXPENSE = 'SAVE_EXPENSE';
+export const DELETE_TASK = 'DELETE_TASK';
 
 export const saveUserEmail = (payload) => ({
   type: USER_EMAIL,
@@ -16,6 +17,11 @@ const saveCurrencies = (json) => ({
 export const saveExchangeRates = (payload) => ({
   type: SAVE_EXPENSE,
   payload,
+});
+
+export const removeTask = (taskId) => ({
+  type: DELETE_TASK,
+  taskId,
 });
 
 export const fetchCurrencies = () => (

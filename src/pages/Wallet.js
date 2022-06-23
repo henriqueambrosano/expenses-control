@@ -6,6 +6,7 @@ import {
   saveExchangeRates,
   removeTask,
   actionEditTask,
+  saveEditedTask,
 } from '../store/actions/index';
 
 class Wallet extends React.Component {
@@ -43,17 +44,22 @@ class Wallet extends React.Component {
       });
   };
 
-  changeTask = (taskId) => {
-    const { editTask } = this.props;
+  changeTask = (expense) => {
+    const { editTask, expenses } = this.props;
 
-    editTask({ edit: true, idToEdit: taskId });
+    this.setState(expenses[expenses.indexOf(expense)]);
+    editTask({ edit: true, idToEdit: expenses.indexOf(expense) });
   }
 
-  saveEditedTask = () 
-
   render() {
-    const { userEmail, currencies, expenses, deleteTask, editing, idToEdit } = this.props;
-    console.log(idToEdit);
+    const {
+      userEmail,
+      currencies,
+      expenses,
+      deleteTask,
+      editing,
+      recordEditedTask,
+    } = this.props;
     const { value, description } = this.state;
     return (
       <div>
@@ -111,7 +117,15 @@ class Wallet extends React.Component {
             <option>Transporte</option>
             <option>Saúde</option>
           </select>
-          {editing ? <button type="button">Editar despesa</button>
+          {editing
+            ? (
+              <button
+                type="button"
+                onClick={ () => recordEditedTask(this.state) }
+              >
+                Editar despesa
+              </button>
+            )
             : (
               <button type="button" onClick={ this.recordExpense }>
                 Adicionar despesa
@@ -150,7 +164,7 @@ class Wallet extends React.Component {
                   <button
                     type="button"
                     data-testid="edit-btn"
-                    onClick={ () => this.changeTask(expense.id) }
+                    onClick={ () => this.changeTask(expense) }
                   >
                     Editar
                   </button>
@@ -182,8 +196,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchCoins: () => dispatch(fetchCurrencies()),
   saveExpense: (payload) => dispatch(saveExchangeRates(payload)),
-  deleteTask: (taskId) => dispatch(removeTask(taskId)),
-  editTask: (taskId) => dispatch(actionEditTask(taskId)),
+  deleteTask: (expenseId) => dispatch(removeTask(expenseId)),
+  editTask: (expenseId) => dispatch(actionEditTask(expenseId)),
+  recordEditedTask: (expense) => dispatch(saveEditedTask(expense)),
 });
 
 Wallet.propTypes = {
@@ -194,8 +209,9 @@ Wallet.propTypes = {
   expenses: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   deleteTask: PropTypes.func.isRequired,
   editing: PropTypes.bool.isRequired,
-  idToEdit: PropTypes.number.isRequired,
+  // idToEdit: PropTypes.number.isRequired,
   editTask: PropTypes.func.isRequired,
+  recordEditedTask: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);

@@ -1,7 +1,12 @@
 // Esse reducer será responsável por tratar o todas as informações relacionadas as despesas
-import { FETCH_CURRENCIES, SAVE_EXPENSE, DELETE_TASK, EDIT_TASK, SAVE_EDITED_TASK } from '../store/actions';
+import {
+  FETCH_CURRENCIES,
+  SAVE_EXPENSE,
+  DELETE_TASK, EDIT_TASK,
+  SAVE_EDITED_TASK,
+} from '../store/actions';
 
-const INITIAL_STATE = { currencies: [], expenses: [] };
+const INITIAL_STATE = { currencies: [], expenses: [], editor: false, idToEdit: 0 };
 
 const wallet = (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -16,7 +21,7 @@ const wallet = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       expenses: [...state.expenses,
-        { id: state.expenses.length, ...action.payload }],
+        { ...action.payload, id: state.expenses.length }],
     };
   case DELETE_TASK:
     return {
@@ -27,13 +32,22 @@ const wallet = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       editor: action.payload.edit,
-      idTiEdit: action.payload.idToEdit,
+      idToEdit: action.payload.idToEdit,
     };
   case SAVE_EDITED_TASK:
     return {
       ...state,
-      expenses: [...state.expenses, state.expenses[action.payload.id] = action.payload]
-    }
+      expenses: [...state.expenses].reduce((acc, curr) => {
+        if (curr.id === action.payload.id) {
+          acc.push(action.payload);
+        } else {
+          acc.push(curr);
+        }
+        return acc;
+      }, []),
+      editor: false,
+      idToEdit: null,
+    };
   default:
     return state;
   }

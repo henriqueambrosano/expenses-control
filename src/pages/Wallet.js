@@ -1,7 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { fetchCurrencies, saveExchangeRates, removeTask } from '../store/actions/index';
+import {
+  fetchCurrencies,
+  saveExchangeRates,
+  removeTask,
+  actionEditTask,
+} from '../store/actions/index';
 
 class Wallet extends React.Component {
   state = {
@@ -38,8 +43,17 @@ class Wallet extends React.Component {
       });
   };
 
+  changeTask = (taskId) => {
+    const { editTask } = this.props;
+
+    editTask({ edit: true, idToEdit: taskId });
+  }
+
+  saveEditedTask = () 
+
   render() {
-    const { userEmail, currencies, expenses, deleteTask } = this.props;
+    const { userEmail, currencies, expenses, deleteTask, editing, idToEdit } = this.props;
+    console.log(idToEdit);
     const { value, description } = this.state;
     return (
       <div>
@@ -97,9 +111,12 @@ class Wallet extends React.Component {
             <option>Transporte</option>
             <option>Saúde</option>
           </select>
-          <button type="button" onClick={ this.recordExpense }>
-            Adicionar despesa
-          </button>
+          {editing ? <button type="button">Editar despesa</button>
+            : (
+              <button type="button" onClick={ this.recordExpense }>
+                Adicionar despesa
+              </button>
+            )}
         </form>
         <table>
           <thead>
@@ -130,7 +147,13 @@ class Wallet extends React.Component {
                 </td>
                 <td>Real</td>
                 <td>
-                  <button type="button" data-testid="edit-btn">Editar</button>
+                  <button
+                    type="button"
+                    data-testid="edit-btn"
+                    onClick={ () => this.changeTask(expense.id) }
+                  >
+                    Editar
+                  </button>
                   <button
                     type="button"
                     data-testid="delete-btn"
@@ -152,12 +175,15 @@ const mapStateToProps = (state) => ({
   userEmail: state.user.email,
   currencies: state.wallet.currencies,
   expenses: state.wallet.expenses,
+  editing: state.wallet.editor,
+  idToEdit: state.wallet.idToEdit,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchCoins: () => dispatch(fetchCurrencies()),
   saveExpense: (payload) => dispatch(saveExchangeRates(payload)),
   deleteTask: (taskId) => dispatch(removeTask(taskId)),
+  editTask: (taskId) => dispatch(actionEditTask(taskId)),
 });
 
 Wallet.propTypes = {
@@ -167,6 +193,9 @@ Wallet.propTypes = {
   saveExpense: PropTypes.func.isRequired,
   expenses: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   deleteTask: PropTypes.func.isRequired,
+  editing: PropTypes.bool.isRequired,
+  idToEdit: PropTypes.number.isRequired,
+  editTask: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);

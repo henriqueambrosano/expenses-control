@@ -3,6 +3,8 @@ export const USER_EMAIL = 'USER_EMAIL';
 export const FETCH_CURRENCIES = 'FETCH_CURRENCIES';
 export const SAVE_EXPENSE = 'SAVE_EXPENSE';
 export const DELETE_TASK = 'DELETE_TASK';
+export const EDIT_TASK = 'EDIT_TASK';
+export const SAVE_EDITED_TASK = 'SAVE_EDITED_TASK';
 
 export const saveUserEmail = (payload) => ({
   type: USER_EMAIL,
@@ -22,6 +24,16 @@ export const saveExchangeRates = (payload) => ({
 export const removeTask = (taskId) => ({
   type: DELETE_TASK,
   taskId,
+});
+
+export const actionEditTask = (payload) => ({
+  type: EDIT_TASK,
+  payload,
+});
+
+export const saveEditedTask = (payload) => ({
+  type: SAVE_EDITED_TASK,
+  payload,
 });
 
 export const fetchCurrencies = () => (

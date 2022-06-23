@@ -208,9 +208,13 @@ Wallet.propTypes = {
   saveExpense: PropTypes.func.isRequired,
   expenses: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   deleteTask: PropTypes.func.isRequired,
-  editing: PropTypes.bool.isRequired,
+  editing: PropTypes.bool,
   editTask: PropTypes.func.isRequired,
   recordEditedTask: PropTypes.func.isRequired,
+};
+
+Wallet.defaultProps = {
+  editing: false,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);

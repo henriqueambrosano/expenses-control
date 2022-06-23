@@ -209,7 +209,6 @@ Wallet.propTypes = {
   expenses: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   deleteTask: PropTypes.func.isRequired,
   editing: PropTypes.bool.isRequired,
-  // idToEdit: PropTypes.number.isRequired,
   editTask: PropTypes.func.isRequired,
   recordEditedTask: PropTypes.func.isRequired,
 };

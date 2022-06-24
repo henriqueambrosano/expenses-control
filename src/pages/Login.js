@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { saveUserEmail } from '../store/actions/index';
+import walletImage from '../images/wallet.png';
 
 class Login extends React.Component {
   state = {
@@ -11,7 +12,7 @@ class Login extends React.Component {
   };
 
   validateLogin = () => {
-    const mailformat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+    const mailformat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/; // REGEX DO STACKOVERFLOW
     const { email, senha } = this.state;
     const validPassword = senha.length > '5';
     const validEmail = email.match(mailformat);
@@ -43,29 +44,33 @@ class Login extends React.Component {
   render() {
     const { email, senha, btnDisabled } = this.state;
     return (
-      <div>
-        <h1>Login Page</h1>
-        <form>
-          <input
-            type="email"
-            name="email"
-            value={ email }
-            placeholder="E-mail"
-            data-testid="email-input"
-            onChange={ this.handleChange }
-          />
-          <input
-            type="password"
-            name="senha"
-            value={ senha }
-            placeholder="Senha"
-            data-testid="password-input"
-            onChange={ this.handleChange }
-          />
-          <button type="button" onClick={ this.login } disabled={ btnDisabled }>
-            Entrar
-          </button>
-        </form>
+      <div className="login-container">
+        <div className="login-form">
+          <img alt="wallet" src={ walletImage } />
+          <form>
+            <input
+              type="email"
+              name="email"
+              value={ email }
+              placeholder="EMAIL"
+              data-testid="email-input"
+              onChange={ this.handleChange }
+            />
+            <br />
+            <input
+              type="password"
+              name="senha"
+              value={ senha }
+              placeholder="SENHA"
+              data-testid="password-input"
+              onChange={ this.handleChange }
+            />
+            <br />
+            <button type="button" onClick={ this.login } disabled={ btnDisabled }>
+              Entrar
+            </button>
+          </form>
+        </div>
       </div>
     );
   }

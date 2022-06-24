@@ -1,3 +1,7 @@
+/* eslint-disable max-lines */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable react/jsx-max-depth */
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -8,6 +12,7 @@ import {
   actionEditTask,
   saveEditedTask,
 } from '../store/actions/index';
+import walletImage from '../images/wallet.png';
 
 class Wallet extends React.Component {
   state = {
@@ -62,77 +67,105 @@ class Wallet extends React.Component {
     } = this.props;
     const { value, description } = this.state;
     return (
-      <div>
-        <h1> TrybeWallet </h1>
-        <p data-testid="email-field">{userEmail}</p>
-        <p data-testid="total-field">
-          {!expenses ? 0 : expenses.reduce((acc, curr) => {
-            acc += curr.value * curr.exchangeRates[curr.currency].ask;
-            return acc;
-          }, 0).toFixed(2)}
-        </p>
-        <p data-testid="header-currency-field"> BRL </p>
-        <form>
-          <input
-            type="text"
-            name="value"
-            value={ value }
-            onChange={ this.handleChange }
-            data-testid="value-input"
-            placeholder="valor da despesa"
-          />
-          <input
-            type="text"
-            name="description"
-            value={ description }
-            onChange={ this.handleChange }
-            data-testid="description-input"
-            placeholder="descrição da despesa"
-          />
-          <label htmlFor="coins">
-            Moeda
-            <select id="coins" name="currency" onChange={ this.handleChange }>
-              {currencies.map((coin) => (
-                <option key={ coin }>{coin}</option>
-              ))}
-            </select>
-          </label>
-          <select
-            data-testid="method-input"
-            name="method"
-            onChange={ this.handleChange }
-          >
-            <option>Dinheiro</option>
-            <option>Cartão de crédito</option>
-            <option>Cartão de débito</option>
-          </select>
-          <select
-            data-testid="tag-input"
-            name="tag"
-            onChange={ this.handleChange }
-          >
-            <option>Alimentação</option>
-            <option>Lazer</option>
-            <option>Trabalho</option>
-            <option>Transporte</option>
-            <option>Saúde</option>
-          </select>
-          {editing
-            ? (
-              <button
-                type="button"
-                onClick={ () => recordEditedTask(this.state) }
+      <div className="wallet-container">
+        <header>
+          <div className="wallet-info-container">
+            <div className="wallet-info left">
+              <img alt="wallet icon" src={ walletImage } />
+              <h1>WALLET CONTROL</h1>
+            </div>
+            <div className="wallet-info right">
+              <i className="fa-solid fa-circle-user" />
+              <p data-testid="email-field">{userEmail}</p>
+              <i className="fa-solid fa-coins" />
+              <p data-testid="total-field">
+                {!expenses ? 0 : expenses.reduce((acc, curr) => {
+                  acc += curr.value * curr.exchangeRates[curr.currency].ask;
+                  return acc;
+                }, 0).toFixed(2)}
+              </p>
+              <span data-testid="header-currency-field"> BRL </span>
+            </div>
+          </div>
+
+          <form className="wallet-form">
+            <label htmlFor="value">
+              VALOR
+              <input
+                type="text"
+                name="value"
+                id="value"
+                value={ value }
+                onChange={ this.handleChange }
+                data-testid="value-input"
+                placeholder="valor da despesa"
+              />
+            </label>
+            <label htmlFor="description">
+              DESCRIÇÃO
+              <input
+                type="text"
+                name="description"
+                id="description"
+                value={ description }
+                onChange={ this.handleChange }
+                data-testid="description-input"
+                placeholder="descrição da despesa"
+              />
+            </label>
+            <label htmlFor="coins">
+              MOEDA
+              <select id="coins" name="currency" onChange={ this.handleChange }>
+                {currencies.map((coin) => (
+                  <option key={ coin }>{coin}</option>
+                ))}
+              </select>
+            </label>
+            <label htmlFor="method">
+              MÉTODO DE PAGAMENTO
+              <select
+                data-testid="method-input"
+                name="method"
+                id="method"
+                onChange={ this.handleChange }
               >
-                Editar despesa
-              </button>
-            )
-            : (
-              <button type="button" onClick={ this.recordExpense }>
-                Adicionar despesa
-              </button>
-            )}
-        </form>
-        <table>
+                <option>Dinheiro</option>
+                <option>Cartão de crédito</option>
+                <option>Cartão de débito</option>
+              </select>
+            </label>
+            <label htmlFor="tag">
+              TAG
+              <select
+                data-testid="tag-input"
+                name="tag"
+                id="tag"
+                onChange={ this.handleChange }
+              >
+                <option>Alimentação</option>
+                <option>Lazer</option>
+                <option>Trabalho</option>
+                <option>Transporte</option>
+                <option>Saúde</option>
+              </select>
+            </label>
+            {editing
+              ? (
+                <button
+                  type="button"
+                  onClick={ () => recordEditedTask(this.state) }
+                >
+                  Editar despesa
+                </button>
+              )
+              : (
+                <button type="button" onClick={ this.recordExpense }>
+                  Adicionar despesa
+                </button>
+              )}
+          </form>
+        </header>
+        <table className="expenses-table">
           <thead>
             <tr>
               <th>Descrição</th>
@@ -161,20 +194,18 @@ class Wallet extends React.Component {
                 </td>
                 <td>Real</td>
                 <td>
-                  <button
+                  <i
+                    className="fa-solid fa-pen-to-square"
                     type="button"
                     data-testid="edit-btn"
                     onClick={ () => this.changeTask(expense) }
-                  >
-                    Editar
-                  </button>
-                  <button
+                  />
+                  <i
+                    className="fa-solid fa-trash-can"
                     type="button"
                     data-testid="delete-btn"
                     onClick={ () => deleteTask(expense.id) }
-                  >
-                    Excluir
-                  </button>
+                  />
                 </td>
               </tr>
             ))}
